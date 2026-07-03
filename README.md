@@ -57,3 +57,4 @@ EduMind is an AI-powered career roadmap and skill development platform built wit
 - Dashboard currently uses JWT authorization header for `/api/dashboard`
 - The chatbot page is a placeholder for future AI integration
 - Tailwind and Recharts are used for responsive UI and charts
+# career-path
