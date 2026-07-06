@@ -1,6 +1,19 @@
 import axios from 'axios'
 
-const API_BASE = 'http://localhost:8000/api'
+// Dynamically set API base URL based on current host
+const getApiBase = () => {
+  const host = window.location.hostname
+  const isLocalhost = host === 'localhost' || host === '127.0.0.1'
+  
+  if (isLocalhost) {
+    return 'http://localhost:8000/api'
+  }
+  
+  // For non-localhost, use the same host but with port 8000
+  return `http://${host}:8000/api`
+}
+
+const API_BASE = getApiBase()
 
 const api = axios.create({
   baseURL: API_BASE,

@@ -15,6 +15,12 @@ export default function LoginPage() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  const getErrorMessage = (err) => {
+    if (err?.response?.data?.detail) return err.response.data.detail
+    if (err?.request) return 'Unable to reach the backend server. Please make sure the API is running at http://localhost:8000.'
+    return err?.message || 'Unable to sign in. Please try again.'
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
@@ -22,9 +28,10 @@ export default function LoginPage() {
 
     try {
       await login({ email: formData.email, password: formData.password })
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
-      setError(err?.response?.data?.detail || 'Unable to sign in. Please try again.')
+      console.error('Login error:', err)
+      setError(getErrorMessage(err))
     } finally {
       setLoading(false)
     }

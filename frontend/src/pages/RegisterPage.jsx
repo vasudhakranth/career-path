@@ -22,9 +22,14 @@ export default function RegisterPage() {
 
     try {
       await register({ name: formData.name, email: formData.email, password: formData.password })
-      navigate('/')
+      navigate('/login')
     } catch (err) {
-      setError(err?.response?.data?.detail || 'Unable to create your account right now.')
+      console.error('Registration error:', err)
+      const errorMessage = 
+        err?.response?.data?.detail || 
+        err?.message || 
+        'Unable to create your account right now.'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
