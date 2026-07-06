@@ -6,20 +6,37 @@ export default function Layout({ children }) {
   const location = useLocation()
   const isSkillRoute = location.pathname === '/skills' || location.pathname.startsWith('/skills/')
 
+  const SidebarLink = ({ to, label, isActive }) => (
+    <Link
+
+      to={to}
+      className={
+        'group flex w-full items-center justify-between rounded-xl px-4 py-2 text-sm font-semibold transition ' +
+        (isActive
+          ? 'bg-violet-500/15 ring-1 ring-violet-500/40 text-violet-200'
+          : 'text-slate-300 hover:bg-slate-900/60 hover:text-white')
+      }
+    >
+      <span>{label}</span>
+      <span className="text-xs text-slate-500 group-hover:text-slate-300">›</span>
+    </Link>
+  )
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
+
       <header className="sticky top-0 z-20">
         {/* Top nav */}
-        <div className="border-b border-slate-800 bg-slate-900/80 backdrop-blur-lg">
+        <div className="border-b border-slate-200 bg-white/90 backdrop-blur-lg">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
             <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-violet-500/15 ring-1 ring-violet-500/30">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 ring-1 ring-blue-200">
                 {/* simple education/coding logo */}
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-violet-300"
+                  className="h-5 w-5 text-blue-600"
                 >
                   <path
                     d="M12 3L2 8l10 5 10-5-10-5Z"
@@ -36,62 +53,10 @@ export default function Layout({ children }) {
                 </svg>
               </div>
               <div className="leading-tight">
-                <Link to="/" className="text-xl font-bold text-white">
+                <Link to="/" className="text-xl font-bold text-slate-900">
                   EduMind
                 </Link>
-                <p className="text-xs text-slate-400">AI-Powered Career Roadmaps</p>
-              </div>
-            </div>
-
-            {/* Left menu items (Home / Roadmap / Skills / Projects / Resume + Tutorial links) */}
-            <nav className="hidden items-center gap-4 lg:flex">
-              <Link to="/" className="text-slate-300 hover:text-white">
-                Home
-              </Link>
-              <Link to="/roadmap" className="text-slate-300 hover:text-white">
-                Roadmaps
-              </Link>
-              <Link to="/skills" className="text-slate-300 hover:text-white">
-                Skills
-              </Link>
-              <Link to="/projects" className="text-slate-300 hover:text-white">
-                Projects
-              </Link>
-              <Link to="/resume" className="text-slate-300 hover:text-white">
-                Resume
-              </Link>
-
-            </nav>
-
-
-            {/* Center search */}
-            <div className="hidden w-full max-w-md items-center md:flex">
-              <div className="flex w-full items-center gap-2 rounded-full bg-slate-950/60 px-4 py-2 ring-1 ring-slate-700 focus-within:ring-violet-500">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-slate-400"
-                >
-                  <path
-                    d="M21 21l-4.35-4.35"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <circle
-                    cx="11"
-                    cy="11"
-                    r="7"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Search tutorials, skills..."
-                  className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
-                />
+                <p className="text-xs text-slate-500">AI-Powered Career Roadmaps</p>
               </div>
             </div>
 
@@ -100,14 +65,14 @@ export default function Layout({ children }) {
               {user ? (
                 <button
                   onClick={logout}
-                  className="rounded-full border border-violet-500 px-4 py-2 text-sm text-violet-200 hover:bg-violet-500/10"
+                  className="rounded-full border border-blue-200 px-4 py-2 text-sm text-blue-700 hover:bg-blue-50"
                 >
                   Logout
                 </button>
               ) : (
                 <Link
                   to="/login"
-                  className="rounded-full border border-violet-500 px-4 py-2 text-sm text-violet-200 hover:bg-violet-500/10"
+                  className="rounded-full border border-blue-200 px-4 py-2 text-sm text-blue-700 hover:bg-blue-50"
                 >
                   Login
                 </Link>
@@ -117,10 +82,19 @@ export default function Layout({ children }) {
         </div>
 
         {/* Category strip (show only on skill pages) */}
-
       </header>
 
-      <main className="mx-auto max-w-7xl px-6 py-10">{children}</main>
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-6 py-10 lg:grid-cols-[260px_1fr]">
+        {/* Left sidebar */}
+        <aside className="hidden lg:order-1 lg:block">
+          <div className="sticky top-[96px] rounded-3xl border border-slate-200 bg-white/80 p-4">
+            <nav className="space-y-1" />
+          </div>
+        </aside>
+
+        <main className="order-1 lg:order-2">{children}</main>
+      </div>
+
 
     </div>
   )

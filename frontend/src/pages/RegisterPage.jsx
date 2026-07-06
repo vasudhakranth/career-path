@@ -1,90 +1,92 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import Card from '../components/Card'
-import PageHero from '../components/PageHero'
+import './AuthPages.css'
 
 export default function RegisterPage() {
-
   const { register } = useAuth()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const navigate = useNavigate()
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (event) => {
+    const { name, value } = event.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
-    try {
-      await register({ name, email, password })
-      navigate('/dashboard')
-    } catch (err) {
-      const detail =
-        err?.response?.data?.detail ||
-        err?.response?.data?.message ||
-        err?.response?.data ||
-        err?.message
+    setLoading(true)
 
-      setError(
-        typeof detail === 'string'
-          ? detail
-          : 'Unable to register. Please try again with a valid email.'
-      )
+    try {
+      await register({ name: formData.name, email: formData.email, password: formData.password })
+      navigate('/')
+    } catch (err) {
+      setError(err?.response?.data?.detail || 'Unable to create your account right now.')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <PageHero caption="Create your EduMind account and save progress." />
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-hero">
+          <span className="auth-badge">Create Account</span>
+          <h1>Start your learning journey</h1>
+          <p>Join EduMind and discover the role that fits you best.</p>
+        </div>
 
-      <Card title="Register" description="Create an EduMind account to save your progress.">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="rounded-2xl bg-red-500/10 p-4 text-sm text-red-200">{error}</div>
-          )}
-          <label className="block text-sm text-slate-300">
-            Name
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <label>
+            Full Name
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="name"
+              placeholder="Your name"
+              value={formData.name}
+              onChange={handleChange}
               required
-              className="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none focus:border-violet-500"
             />
           </label>
-          <label className="block text-sm text-slate-300">
+
+          <label>
             Email
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
               required
-              className="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none focus:border-violet-500"
             />
           </label>
-          <label className="block text-sm text-slate-300">
+
+          <label>
             Password
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              placeholder="Choose a strong password"
+              value={formData.password}
+              onChange={handleChange}
               required
-              className="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none focus:border-violet-500"
             />
           </label>
-          <button type="submit" className="w-full rounded-full bg-violet-500 px-6 py-3 text-sm font-semibold text-white hover:bg-violet-400">
-            Register
+
+          {error ? <p className="auth-error">{error}</p> : null}
+
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? 'Creating account...' : 'Register'}
           </button>
         </form>
 
-        <p className="mt-4 text-sm text-slate-400">
-          Already have an account?{' '}
-          <Link to="/login" className="text-violet-300 hover:underline">
-            Login here
-          </Link>
+        <p className="auth-switch">
+          Already have an account? <Link to="/login">Login</Link>
         </p>
-      </Card>
+      </div>
     </div>
   )
 }
