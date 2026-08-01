@@ -1,4 +1,9 @@
 import { useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import RoadmapPage from './RoadmapPage'
+import SkillsHubPage from './SkillsHubPage'
+import AiChatModal from '../components/AiChatModal'
+import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard,
   Map,
@@ -40,75 +45,65 @@ const sidebarItems = [
   { icon: Settings, label: 'Settings', id: 'settings' },
 ]
 
-const skills = [
+const skillsCatalog = [
   {
     name: 'Python',
     icon: Code2,
     difficulty: 'Intermediate',
-    progress: 72,
     description: 'Learn Python programming basics and advanced concepts',
   },
   {
     name: 'SQL',
     icon: Database,
     difficulty: 'Beginner',
-    progress: 45,
     description: 'Master database queries and management',
   },
   {
     name: 'JavaScript',
     icon: Code2,
     difficulty: 'Beginner',
-    progress: 58,
     description: 'Frontend and backend JavaScript development',
   },
   {
     name: 'React',
     icon: Code2,
     difficulty: 'Intermediate',
-    progress: 68,
     description: 'Build modern UI with React.js',
   },
   {
     name: 'Node.js',
     icon: Code2,
     difficulty: 'Intermediate',
-    progress: 52,
     description: 'Backend development with Node.js',
   },
   {
     name: 'Git & GitHub',
     icon: GitBranch,
     difficulty: 'Beginner',
-    progress: 85,
     description: 'Version control and collaboration',
   },
   {
     name: 'MongoDB',
     icon: Database,
     difficulty: 'Intermediate',
-    progress: 64,
     description: 'NoSQL database design and queries',
   },
   {
     name: 'Machine Learning',
     icon: Brain,
     difficulty: 'Advanced',
-    progress: 38,
     description: 'ML algorithms and implementations',
   },
   {
     name: 'AI',
     icon: Sparkles,
     difficulty: 'Advanced',
-    progress: 32,
     description: 'Artificial Intelligence fundamentals',
   },
   {
     name: 'Cloud Computing',
     icon: Cloud,
     difficulty: 'Intermediate',
-    progress: 42,
     description: 'AWS, Azure, and cloud platforms',
   },
 ]
@@ -121,9 +116,36 @@ const recentActivities = [
 ]
 
 export default function DashboardPage() {
+  const navigate = useNavigate()
+  const { logout, user } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  // Keep sidebar state resilient across route changes
+  const openSidebar = () => setSidebarOpen(true)
+
   const [profileOpen, setProfileOpen] = useState(false)
+  const [activeView, setActiveView] = useState('dashboard')
+  const [aiOpen, setAiOpen] = useState(false)
   const carouselRef = useRef(null)
+
+  const handleNavigation = (itemId) => {
+    // Keep sidebar usable by default: open it when navigating away from the dashboard-internal views.
+    if (itemId) setSidebarOpen(true)
+
+    if (itemId === 'interview') {
+      navigate('/mock-interview')
+    } else if (itemId === 'skills') {
+      setActiveView('skills')
+    } else if (itemId === 'roadmaps') {
+      setActiveView('roadmaps')
+    } else if (itemId === 'resume') {
+      navigate('/resume-builder')
+    } else if (itemId === 'timetable') {
+      navigate('/smart-time-table')
+    } else {
+      setActiveView(itemId)
+    }
+  }
+
 
   const scroll = (direction) => {
     if (carouselRef.current) {
@@ -135,8 +157,39 @@ export default function DashboardPage() {
     }
   }
 
-  const userName = 'Vasudha'
-  const careerProgress = 65
+  const startedSkillNames = Array.isArray(user?.completed_skills)
+    ? user.completed_skills
+        .map((skill) => typeof skill === 'string' ? skill : skill?.skill_name || skill?.name || '')
+        .filter(Boolean)
+    : []
+
+  const skillProgressMap = {
+    Python: 72,
+    SQL: 45,
+    JavaScript: 58,
+    React: 68,
+    'Node.js': 52,
+    'Git & GitHub': 85,
+    MongoDB: 64,
+    'Machine Learning': 38,
+    AI: 32,
+    'Cloud Computing': 42,
+  }
+
+  const recommendedSkillCards = skillsCatalog.map((skill) => ({
+    ...skill,
+    started: startedSkillNames.includes(skill.name),
+    progress: startedSkillNames.includes(skill.name) ? skillProgressMap[skill.name] || 0 : 0,
+  }))
+
+  const userName = user?.name || 'there'
+  const userInitial = (user?.name || 'U').charAt(0).toUpperCase()
+  const supportedProgress = Number(user?.resume_completion || 0)
+  const roadmapProgress = Number(user?.roadmap_completion || 0)
+  const skillProgress = startedSkillNames.length > 0
+    ? Math.min(100, Math.round((startedSkillNames.length / Math.max(skillsCatalog.length, 1)) * 100))
+    : 0
+  const careerProgress = Math.min(100, Math.round((supportedProgress + roadmapProgress + skillProgress) / 3))
 
   return (
     <div className="dashboard-page">
@@ -154,22 +207,36 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        <nav className="sidebar-nav">
+<nav className="sidebar-nav">
           {sidebarItems.map((item) => {
             const Icon = item.icon
+            const isActive = activeView === item.id
+
             return (
-              <a
+              <button
                 key={item.id}
-                href={`#${item.id}`}
-                className="nav-item"
+                type="button"
+                className={`nav-item ${isActive ? 'active' : ''}`}
                 title={item.label}
+                onClick={() => handleNavigation(item.id)}
               >
                 <Icon size={20} />
                 {sidebarOpen && <span>{item.label}</span>}
-              </a>
+              </button>
             )
           })}
         </nav>
+
+        <div className="sidebar-bottom">
+          <button
+            type="button"
+            className="nav-item sidebar-logout-btn"
+            onClick={() => { logout(); navigate('/'); }}
+          >
+            <LogOut size={20} />
+            {sidebarOpen && <span>Logout</span>}
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -187,11 +254,11 @@ export default function DashboardPage() {
           </div>
 
           <div className="nav-right">
-            <button className="ask-ai-btn">
+            <button className="ask-ai-btn" type="button" onClick={() => setAiOpen(true)}>
               <Sparkles size={18} />
               Ask AI
             </button>
-            <button className="notification-btn">
+            <button className="notification-btn" type="button">
               <Bell size={20} />
               <span className="notification-badge">3</span>
             </button>
@@ -200,7 +267,7 @@ export default function DashboardPage() {
                 className="profile-btn"
                 onClick={() => setProfileOpen(!profileOpen)}
               >
-                <div className="avatar">V</div>
+                <div className="avatar">{userInitial}</div>
               </button>
               {profileOpen && (
                 <div className="dropdown-menu">
@@ -225,6 +292,12 @@ export default function DashboardPage() {
 
         {/* Page Content */}
         <div className="page-content">
+          {activeView === 'roadmaps' ? (
+            <RoadmapPage />
+          ) : activeView === 'skills' ? (
+            <SkillsHubPage />
+          ) : (
+            <>
           {/* Welcome Banner */}
           <section className="welcome-section">
             <div className="welcome-banner">
@@ -275,7 +348,7 @@ export default function DashboardPage() {
               </button>
 
               <div className="carousel" ref={carouselRef}>
-                {skills.map((skill) => {
+                {recommendedSkillCards.map((skill) => {
                   const IconComponent = skill.icon
                   const difficultyColor =
                     skill.difficulty === 'Beginner'
@@ -313,7 +386,7 @@ export default function DashboardPage() {
                       </div>
 
                       <button className="continue-learning-btn">
-                        Continue Learning
+                        {skill.started ? 'Continue Learning' : 'Start Learning'}
                         <ArrowRight size={16} />
                       </button>
                     </div>
@@ -384,6 +457,8 @@ export default function DashboardPage() {
               </div>
             </div>
           </section>
+            </>
+          )}
         </div>
 
         <footer className="dashboard-footer">
@@ -403,6 +478,7 @@ export default function DashboardPage() {
           </div>
         </footer>
       </div>
+      <AiChatModal open={aiOpen} onClose={() => setAiOpen(false)} />
     </div>
   )
 }

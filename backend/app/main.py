@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth, roles, skills, roadmaps, projects, dashboard
+from app.routes.youtube_routes import router as youtube_router
+
 
 # NOTE: resume router includes endpoints that require multipart/form-data.
 # Importing it eagerly can break startup if multipart dependencies are misconfigured.
@@ -17,7 +19,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=False,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -28,6 +30,9 @@ app.include_router(skills.router, prefix="/api/skills", tags=["Skills"])
 app.include_router(roadmaps.router, prefix="/api/roadmaps", tags=["Roadmaps"])
 app.include_router(projects.router, prefix="/api/projects", tags=["Projects"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
+app.include_router(youtube_router, prefix="/api/youtube", tags=["YouTube"])
+from app.routes import execute
+app.include_router(execute.router, prefix="/api/execute", tags=["Execute"])
 
 # Import resume router only when multipart endpoints are required.
 # This avoids startup failures if multipart dependency checks are misconfigured.
@@ -37,6 +42,11 @@ try:
 except Exception:
     # Resume endpoints will be unavailable until dependencies are fixed.
     pass
+
+# Interview questions (resume-aware)
+from app.routes import interview
+app.include_router(interview.router, prefix="/api/interview", tags=["Interview"])
+
 
 @app.get("/")
 

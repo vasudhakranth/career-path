@@ -3,5 +3,7 @@ uvicorn[standard]
 python-dotenv
 pymongo
 passlib[bcrypt]
+bcrypt<5
 python-jose[cryptography]
 pydantic[email]
+httpx

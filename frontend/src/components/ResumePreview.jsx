@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import html2pdf from 'html2pdf.js'
+import { Document, Packer, Paragraph, TextRun } from 'docx'
 import { Download, Share2 } from 'lucide-react'
 
 const ResumePreview = ({ data = {} }) => {
@@ -18,6 +19,47 @@ const ResumePreview = ({ data = {} }) => {
     }
 
     html2pdf().set(options).from(element).save()
+  }
+
+  const handleDownloadDocx = async () => {
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          new Paragraph({ children: [new TextRun({ text: data.name || 'Your Name', bold: true, size: 28 })] }),
+          new Paragraph({ children: [new TextRun({ text: data.email || '' })] }),
+          new Paragraph({ children: [new TextRun({ text: data.phone || '' })] }),
+          new Paragraph({ children: [new TextRun({ text: data.linkedin || '' })] }),
+          new Paragraph({ children: [new TextRun({ text: data.github || '' })] }),
+          new Paragraph({ children: [new TextRun({ text: data.portfolio || '' })] }),
+          new Paragraph({ text: data.careerObjective || '' }),
+          new Paragraph({ children: [new TextRun({ text: 'Skills', bold: true })] }),
+          new Paragraph({ text: (data.skills || []).join(', ') }),
+          new Paragraph({ children: [new TextRun({ text: 'Experience', bold: true })] }),
+          ...(data.experience || []).map((exp) => new Paragraph({ text: `${exp.position || ''} @ ${exp.company || ''} | ${exp.duration || ''} | ${exp.description || ''} | ${exp.achievements || ''}` })),
+          new Paragraph({ children: [new TextRun({ text: 'Projects', bold: true })] }),
+          ...(data.projects || []).map((project) => new Paragraph({ text: `${project.name || ''} | ${project.description || ''} | ${project.technologies || ''} | ${project.achievements || ''}` })),
+          new Paragraph({ children: [new TextRun({ text: 'Education', bold: true })] }),
+          ...(data.education || []).map((edu) => new Paragraph({ text: `${edu.degree || ''} ${edu.field || ''} | ${edu.school || ''} | ${edu.year || ''} | ${edu.details || ''}` })),
+          new Paragraph({ children: [new TextRun({ text: 'Certifications', bold: true })] }),
+          ...(data.certifications || []).map((cert) => new Paragraph({ text: `${cert.name || ''} | ${cert.issuer || ''} | ${cert.date || ''} | ${cert.credentialId || ''}` })),
+          new Paragraph({ children: [new TextRun({ text: 'Achievements', bold: true })] }),
+          ...(data.achievements || []).map((achievement) => new Paragraph({ text: achievement })),
+          new Paragraph({ children: [new TextRun({ text: 'Languages', bold: true })] }),
+          ...(data.languages || []).map((lang) => new Paragraph({ text: `${lang.language || ''} | ${lang.proficiency || ''}` })),
+          new Paragraph({ children: [new TextRun({ text: 'Interests', bold: true })] }),
+          new Paragraph({ text: data.interests || '' }),
+        ],
+      }],
+    })
+
+    const blob = await Packer.toBlob(doc)
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${(data.name || 'resume').replace(/\s+/g, '_')}.docx`
+    link.click()
+    URL.revokeObjectURL(url)
   }
 
   const handleShare = () => {
@@ -49,6 +91,13 @@ const ResumePreview = ({ data = {} }) => {
         >
           <Download className="w-5 h-5" />
           Download as PDF
+        </button>
+        <button
+          onClick={handleDownloadDocx}
+          className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-6 py-3 text-white font-semibold transition-all transform hover:scale-105"
+        >
+          <Download className="w-5 h-5" />
+          Download as DOCX
         </button>
         <button
           onClick={handleShare}

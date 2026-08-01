@@ -1,6 +1,27 @@
 import { useState } from 'react'
 import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
 
+const resumeFormTheme = `
+  .resume-form-shell { background: linear-gradient(135deg, #f8fbff 0%, #fdf2f8 100%); color: #0f172a; }
+  .resume-form-shell .rounded-lg,
+  .resume-form-shell .rounded-xl,
+  .resume-form-shell .rounded-2xl { border-color: #e8ecf6 !important; }
+  .resume-form-shell .bg-slate-900\/50,
+  .resume-form-shell .bg-slate-900,
+  .resume-form-shell .bg-slate-800,
+  .resume-form-shell .bg-slate-800\/50 { background-color: #fcfdff !important; }
+  .resume-form-shell .border-slate-700,
+  .resume-form-shell .border-slate-800 { border-color: #e8ecf6 !important; }
+  .resume-form-shell .text-white { color: #0f172a !important; }
+  .resume-form-shell .text-slate-500,
+  .resume-form-shell .text-slate-400,
+  .resume-form-shell .text-slate-300 { color: #64748b !important; }
+  .resume-form-shell input,
+  .resume-form-shell textarea,
+  .resume-form-shell select { background-color: #ffffff !important; color: #0f172a !important; border-color: #dbe6f7 !important; }
+  .resume-form-shell .hover\:bg-slate-800:hover { background-color: #f4f7fb !important; }
+`
+
 const ResumeBuilder = ({ initialData = {}, onDataChange, roleType = '' }) => {
   const [resumeData, setResumeData] = useState({
     name: initialData.name || '',
@@ -217,7 +238,8 @@ const ResumeBuilder = ({ initialData = {}, onDataChange, roleType = '' }) => {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="resume-form-shell space-y-6">
+      <style>{resumeFormTheme}</style>
       {/* Contact Section */}
       <div className="rounded-lg border border-slate-700 bg-slate-900/50 p-6">
         <SectionHeader title="Contact Information" section="contact" />

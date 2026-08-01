@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Depends, Header
 from pydantic import BaseModel
 from app.models.schemas import UserCreate, UserLogin
 from app.database.connection import db
-from app.auth.security import get_password_hash, verify_password, create_access_token, decode_access_token
+from app.auth.security import get_password_hash, verify_password, create_access_token, decode_access_token, truncate_password_bytes
 from bson import ObjectId
 
 router = APIRouter()
@@ -29,14 +29,6 @@ def serialize_user(user):
     }
 
 
-def truncate_password_bytes(password: str, max_bytes: int = 72) -> str:
-    password_bytes = password.encode("utf-8")
-    if len(password_bytes) <= max_bytes:
-        return password
-    truncated_bytes = password_bytes[:max_bytes]
-    return truncated_bytes.decode("utf-8", errors="ignore")
-
-
 async def get_current_user_id(authorization: str = Header(None)):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Unauthorized")
@@ -58,10 +50,9 @@ async def register_user(user: UserCreate):
         if len(user.password) < 6:
             raise HTTPException(status_code=400, detail="Password must be at least 6 characters long")
 
-        # bcrypt has a strict 72-byte limit.
-        # Ensure we never send more than 72 bytes to the bcrypt hasher.
-        password_to_hash = truncate_password_bytes(user.password, 72)
-        hashed_password = get_password_hash(password_to_hash)
+        # BCrypt has a strict 72-byte password limit. The shared helper
+        # in security.py truncates safely before hashing.
+        hashed_password = get_password_hash(user.password)
 
 
 
@@ -95,10 +86,7 @@ async def register_user(user: UserCreate):
 async def login_user(user: UserLogin):
     db_user = db.users.find_one({"email": user.email})
 
-    # Truncate password to 72 bytes for verification (same as registration)
-    password_to_verify = truncate_password_bytes(user.password)
-
-    if not db_user or not verify_password(password_to_verify, db_user["password"]):
+    if not db_user or not verify_password(user.password, db_user["password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
 

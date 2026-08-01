@@ -1,0 +1,218 @@
+.compiler-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: calc(100vh - 96px);
+}
+
+.compiler-header,
+.compiler-panel,
+.ai-panel,
+.notes-panel,
+.resources-panel,
+.challenges-panel,
+.output-panel {
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 28px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 28px 80px rgba(15, 23, 42, 0.08);
+  padding: 26px;
+}
+
+.compiler-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.compiler-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 3rem);
+}
+
+.compiler-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
+  gap: 24px;
+}
+
+.language-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.language-btn {
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  background: white;
+  border-radius: 16px;
+  padding: 10px 16px;
+  cursor: pointer;
+  color: #4338ca;
+  font-weight: 600;
+}
+
+.language-btn.active {
+  background: linear-gradient(135deg, #6366f1, #2563eb);
+  color: white;
+  border-color: transparent;
+}
+
+.editor-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.editor-actions button,
+.notes-panel button,
+.challenge-meta button {
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #2563eb);
+  color: white;
+  border-radius: 16px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.code-editor,
+.notes-editor {
+  width: 100%;
+  min-height: 300px;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 18px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  background: rgba(15, 23, 42, 0.96);
+  color: #f8fafc;
+  resize: vertical;
+}
+
+.output-panel pre {
+  margin: 0;
+  white-space: pre-wrap;
+  color: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.output-header h2 {
+  margin: 0;
+}
+
+.assistant-panel {
+  display: grid;
+  gap: 24px;
+}
+
+.panel-title h2 {
+  margin: 0 0 12px;
+}
+
+.ai-list,
+.pdf-list,
+.challenge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ai-item,
+.pdf-item,
+.challenge-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  background: white;
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.ai-item span {
+  font-weight: 700;
+  color: #4338ca;
+}
+
+.notes-panel textarea {
+  min-height: 220px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+}
+
+.resources-panel .pdf-item {
+  justify-content: space-between;
+}
+
+.resources-panel .pdf-item button {
+  width: auto;
+}
+
+.challenge-card {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.challenge-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.challenge-meta span {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+@media (max-width: 1100px) {
+  .compiler-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Panels below compiler editor */
+.below-panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 18px;
+}
+
+.stack-under-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (max-width: 1100px) {
+  .below-panels { grid-template-columns: 1fr; }
+}
+
+

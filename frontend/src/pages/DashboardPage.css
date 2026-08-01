@@ -82,6 +82,21 @@
   padding: 12px;
 }
 
+/* Sidebar bottom for logout */
+.sidebar .sidebar-bottom {
+  padding: 12px;
+  border-top: 1px solid rgba(79, 70, 229, 0.1);
+}
+
+.sidebar .sidebar-logout-btn {
+  color: rgb(239, 68, 68);
+}
+
+.sidebar .sidebar-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: rgb(185, 28, 28);
+}
+
 .nav-item {
   display: flex;
   align-items: center;
@@ -98,6 +113,12 @@
 .nav-item:hover {
   background: rgba(79, 70, 229, 0.1);
   color: #4f46e5;
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.16), rgba(59, 130, 246, 0.12));
+  color: #4f46e5;
+  box-shadow: inset 0 0 0 1px rgba(79, 70, 229, 0.14);
 }
 
 .nav-item:active {

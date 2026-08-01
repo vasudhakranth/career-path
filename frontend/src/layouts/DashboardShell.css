@@ -1,0 +1,47 @@
+.dashboard-shell{
+  min-height:100vh;
+  width:100%;
+  display:flex;
+}
+
+/* Sidebar + layout styles were copied from DashboardPage.css
+   to avoid @import ordering issues during Vite build. */
+
+.sidebar-bottom{
+  padding: 12px;
+  border-top: 1px solid rgba(79, 70, 229, 0.1);
+  position: sticky;
+  bottom: 0;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(10px);
+}
+
+
+.sidebar-logout{
+  width: 100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-content:flex-start;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(79, 70, 229, 0.12);
+  color: #6b7280;
+  cursor:pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-logout:hover{
+  background: rgba(239,68,68,0.06);
+  border-color: rgba(239,68,68,0.22);
+  color: rgb(239,68,68);
+}
+
+.sidebar-logout span{
+  font-weight:700;
+  font-size:14px;
+}
+
+
+

@@ -1,31 +1,32 @@
-# Edit Plan
+# Redesign Plan: GeeksforGeeks-style Skill Learning Page
 
-## Information Gathered
-- `frontend/src/layouts/Layout.jsx` renders a left sidebar with links to:
-  - Home, Dashboard, skills, resume builder, mentor, projects, smart time table.
-- This sidebar is currently hidden on small screens (`hidden lg:block`) but still exists on `lg+` screens.
-- User request: remove these sidebar pages: **Dashboard, Skills, Roadmap timetable, Mentor page, Resume builder pages**.
-  (Roadmap timetable likely refers to `/smart-time-table`; however the sidebar currently does not include `/roadmap`.)
+## Changes Required
 
-## Plan
-1. Edit `frontend/src/layouts/Layout.jsx`:
-   - Remove sidebar links for:
-     - `/dashboard` (Dashboard)
-     - `/skills` (skills)
-     - `/smart-time-table` (smart time table / roadmap timetable)
-     - `/mentor` (mentor)
-     - `/resume` (resume builder)
-   - Keep remaining links: Home and Projects.
-2. Leave routing (`frontend/src/App.jsx`) unchanged.
-3. Test by running the app and verifying sidebar items are gone.
+### 1. Sidebar Redesign (GeeksforGeeks-style)
+- **Search bar** at top to filter topics/subtopics
+- **Beginner / Intermediate / Advanced sections** with collapsible groups
+- **Tree structure** with proper indentation and level indicators
+- **Progress checkmarks** (green check for completed topics)
+- **Active topic highlighting** with left border accent
+- **Topic count badges** (e.g., "3/5 completed")
 
-## Dependent Files to edit
-- `frontend/src/layouts/Layout.jsx`
+### 2. Main Content Redesign (Article-style like GFG)
+- **Breadcrumb navigation** showing path: Skill → Level → Topic → Subtopic
+- **Article-like content layout** with proper headings, code blocks, and output sections
+- **"Mark as Completed" button** with checkmark animation
+- **Previous/Next navigation** at bottom for moving between topics
+- **Topic progress bar** at top showing overall progress
 
-## Followup steps
-- (Already running) verify UI at `lg+` screen sizes.
+### 3. Data Structure Changes
+- Add `level` field to topics (beginner/intermediate/advanced)
+- Restructure sidebar to group topics by level
+- Add completion tracking state (localStorage based)
 
-<ask_followup_question>
-Confirm whether to keep ONLY “Home” and “Projects” in the sidebar after removing Dashboard/Skills/Smart Time Table/Mentor/Resume Builder.
-</ask_followup_question>
+### 4. State Changes
+- Add `searchQuery` state for filtering
+- Add `completedTopics` state (Set of completed topic IDs, stored in localStorage)
+- Add `sidebarCollapsed` state for mobile toggle
 
+### Files to Edit
+- `frontend/src/pages/SkillLearningPage.jsx` - Complete rewrite of component
+- `frontend/src/pages/SkillLearningPage.css` - Complete rewrite of styles
