@@ -16,6 +16,7 @@ import InterviewReportPage from './pages/InterviewReportPage'
 import ResumeBuilderPage from './pages/ResumeBuilderPage'
 import SmartTimeTablePage from './pages/SmartTimeTablePage'
 import SettingsPage from './pages/SettingsPage'
+import AskAIPage from './pages/AskAIPage'
 
 function App() {
   return (
@@ -82,6 +83,15 @@ function App() {
             element={
               <DashboardShell>
                 <SmartTimeTablePage />
+              </DashboardShell>
+            }
+          />
+
+          <Route
+            path="/ask-ai"
+            element={
+              <DashboardShell>
+                <AskAIPage />
               </DashboardShell>
             }
           />

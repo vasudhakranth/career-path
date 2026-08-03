@@ -2,7 +2,6 @@ import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import RoadmapPage from './RoadmapPage'
 import SkillsHubPage from './SkillsHubPage'
-import AiChatModal from '../components/AiChatModal'
 import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard,
@@ -124,7 +123,6 @@ export default function DashboardPage() {
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [activeView, setActiveView] = useState('dashboard')
-  const [aiOpen, setAiOpen] = useState(false)
   const carouselRef = useRef(null)
 
   const handleNavigation = (itemId) => {
@@ -254,7 +252,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="nav-right">
-            <button className="ask-ai-btn" type="button" onClick={() => setAiOpen(true)}>
+            <button className="ask-ai-btn" type="button" onClick={() => navigate('/ask-ai')}>
               <Sparkles size={18} />
               Ask AI
             </button>
@@ -478,7 +476,6 @@ export default function DashboardPage() {
           </div>
         </footer>
       </div>
-      <AiChatModal open={aiOpen} onClose={() => setAiOpen(false)} />
     </div>
   )
 }

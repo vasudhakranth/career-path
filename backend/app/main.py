@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import auth, roles, skills, roadmaps, projects, dashboard
+from app.routes import auth, roles, skills, roadmaps, projects, dashboard, ask
 from app.routes.youtube_routes import router as youtube_router
 
 
@@ -30,6 +30,7 @@ app.include_router(skills.router, prefix="/api/skills", tags=["Skills"])
 app.include_router(roadmaps.router, prefix="/api/roadmaps", tags=["Roadmaps"])
 app.include_router(projects.router, prefix="/api/projects", tags=["Projects"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
+app.include_router(ask.router, prefix="/api/ask", tags=["Ask AI"])
 app.include_router(youtube_router, prefix="/api/youtube", tags=["YouTube"])
 from app.routes import execute
 app.include_router(execute.router, prefix="/api/execute", tags=["Execute"])

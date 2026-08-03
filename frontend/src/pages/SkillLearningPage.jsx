@@ -1274,6 +1274,159 @@ const realLessonContent = {
       ],
       practice: "Review one of your own components against this checklist and fix any mistakes you find — mutated state, missing keys, or missing effect cleanup."
     }
+  },
+  typescript: {
+    types: {
+      explanation: "TypeScript adds static types on top of JavaScript, letting you annotate variables, parameters, and return values with types like string, number, arrays (string[]), and custom object shapes via interfaces, catching type errors at compile time instead of at runtime.",
+      example: `interface User {\n  name: string;\n  age: number;\n}\nfunction greet(user: User): string {\n  return \`Hello, \${user.name}\`;\n}\nconsole.log(greet({ name: "Alice", age: 21 }));`,
+      output: `Hello, Alice`,
+      notes: [
+        "TypeScript is a superset of JavaScript — any valid JS is valid TS, with types added on top.",
+        "interface and type both describe object shapes; type can also alias unions and primitives.",
+        "Type errors are caught at compile time (tsc) — they never affect the actual runtime JavaScript output."
+      ],
+      practice: "Define an interface for a Product (id, name, price) and write a fully-typed function that calculates total price for an array of products."
+    },
+    tsconfig: {
+      explanation: "tsconfig.json configures how the TypeScript compiler behaves — target (which JS version to compile down to), strict mode (enables the full set of type-checking rules), and module resolution settings. Editors and linters use this file to give real-time type-checking feedback as you write code.",
+      example: `{\n  "compilerOptions": {\n    "target": "ES2020",\n    "strict": true,\n    "module": "ESNext",\n    "outDir": "./dist"\n  }\n}`,
+      output: `Configures the compiler to output modern ES2020 JavaScript with strict type checks into a dist/ folder.`,
+      notes: [
+        "strict: true turns on multiple checks at once (noImplicitAny, strictNullChecks, etc.) — recommended for new projects.",
+        "target controls which JS features get compiled down vs left as-is, based on your minimum supported environment.",
+        "Run tsc --noEmit to type-check a project without generating output files, often used in CI."
+      ],
+      practice: "Create a tsconfig.json with strict mode enabled, then intentionally write a function with a type error and observe the compiler catch it."
+    },
+    advanced: {
+      explanation: "Generics let you write reusable functions or types that work with multiple types while preserving type safety. Union types (string | number) allow a value to be one of several types, and utility types like Pick<T> and Omit<T> transform existing types without rewriting them.",
+      example: `function firstItem<T>(items: T[]): T | undefined {\n  return items[0];\n}\nconsole.log(firstItem([1, 2, 3]));\n\ntype User = { id: number; name: string; email: string };\ntype UserPreview = Pick<User, "id" | "name">;`,
+      output: `1`,
+      notes: [
+        "Generics (<T>) let one function or type work correctly across many types without using `any`.",
+        "Union types (A | B) require narrowing (typeof checks, etc.) before you can use type-specific properties.",
+        "Pick<T, Keys> selects a subset of properties from a type; Omit<T, Keys> does the opposite, excluding them."
+      ],
+      practice: "Write a generic function pluck<T, K extends keyof T>(items: T[], key: K) that extracts one property from every object in an array."
+    }
+  },
+  java: {
+    syntax: {
+      explanation: "Java is a statically-typed, compiled language where every variable's type is declared explicitly, and code lives inside classes even for a program's entry point (public static void main). Java compiles to bytecode that runs on the JVM, making it 'write once, run anywhere.'",
+      example: `public class Main {\n    public static void main(String[] args) {\n        int age = 21;\n        String name = "EduMind";\n        System.out.println(name + " is " + age + " years old");\n    }\n}`,
+      output: `EduMind is 21 years old`,
+      notes: [
+        "Every Java file's public class name must match the filename exactly (Main.java for class Main).",
+        "main(String[] args) is the fixed entry point signature the JVM looks for when running a program.",
+        "Java is statically typed — a variable's type is fixed at declaration and checked at compile time."
+      ],
+      practice: "Write a Java program that declares variables for a name, age, and GPA, then prints a formatted summary sentence."
+    },
+    oop: {
+      explanation: "Java is fundamentally object-oriented — classes define objects with fields and methods, constructors initialize new objects, and extends implements inheritance so a subclass can reuse and override a parent's behavior. Access modifiers (private, public, protected) control encapsulation.",
+      example: `class Animal {\n    protected String name;\n    Animal(String name) { this.name = name; }\n    String speak() { return name + " makes a sound"; }\n}\nclass Dog extends Animal {\n    Dog(String name) { super(name); }\n    @Override\n    String speak() { return name + " barks"; }\n}`,
+      output: `Creating new Dog("Rex").speak() returns "Rex barks", overriding the parent's generic speak() method.`,
+      notes: [
+        "super(name) calls the parent class's constructor and must be the first statement in a subclass constructor.",
+        "@Override is optional but recommended — it makes the compiler verify you're actually overriding a parent method.",
+        "private fields are only accessible within the class itself; use public getter/setter methods to expose them safely."
+      ],
+      practice: "Create a Shape class with an abstract area() method, and Circle/Rectangle subclasses that implement it differently."
+    },
+    collections: {
+      explanation: "Java's Collections Framework provides ready-made data structures: ArrayList (a resizable array), HashMap (key-value pairs), and HashSet (unique elements), all working with generics for type safety. These are far more flexible than raw arrays, since they can grow, shrink, and offer many built-in methods.",
+      example: `import java.util.*;\n\nList<String> skills = new ArrayList<>();\nskills.add("Java");\nskills.add("Python");\n\nMap<String, Integer> scores = new HashMap<>();\nscores.put("Alice", 92);\n\nSystem.out.println(skills);\nSystem.out.println(scores.get("Alice"));`,
+      output: `[Java, Python]\n92`,
+      notes: [
+        "ArrayList grows automatically as you add elements, unlike a fixed-size array.",
+        "HashMap.get() returns null if a key doesn't exist — check with containsKey() or use getOrDefault().",
+        "Generics (<String>, <String, Integer>) enforce type safety, preventing you from adding the wrong type."
+      ],
+      practice: "Build a HashMap that counts how many times each word appears in a sentence, splitting it with String.split()."
+    }
+  },
+  c: {
+    basics: {
+      explanation: "C is a low-level, compiled, statically-typed language where you manage memory manually and every variable must be declared with an explicit type before use. Programs are compiled (with gcc, for example) into a binary before running, and a C program's entry point is always the main() function.",
+      example: `#include <stdio.h>\n\nint main() {\n    int age = 21;\n    char name[] = "EduMind";\n    printf("%s is %d years old\\n", name, age);\n    return 0;\n}`,
+      output: `EduMind is 21 years old`,
+      notes: [
+        "printf uses format specifiers (%d for int, %s for string, %f for float) that must match the argument types.",
+        "C strings are just arrays of characters ending in a null terminator ('\\0') — there's no built-in String type.",
+        "return 0; from main signals successful program execution to the operating system."
+      ],
+      practice: "Write a C program that declares an int, a float, and a char array, then prints all three with the correct format specifiers."
+    },
+    stdlib: {
+      explanation: "The C standard library provides essential functions by header: stdio.h for input/output (printf, scanf), stdlib.h for memory management and conversions (malloc, atoi), and string.h for string operations (strlen, strcpy). Since C has no garbage collection, memory allocated with malloc() must be manually freed.",
+      example: `#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int *nums = malloc(3 * sizeof(int));\n    nums[0] = 10; nums[1] = 20; nums[2] = 30;\n    for (int i = 0; i < 3; i++) printf("%d\\n", nums[i]);\n    free(nums);\n    return 0;\n}`,
+      output: `10\n20\n30`,
+      notes: [
+        "Every malloc() should have a matching free() — forgetting it causes a memory leak.",
+        "scanf(\"%d\", &age) reads input into an int; the & takes the variable's memory address.",
+        "strcpy/strcat operate on raw character arrays and don't check buffer sizes — a common source of bugs."
+      ],
+      practice: "Write a program that dynamically allocates an array for a user-specified number of integers, fills it, prints the sum, then frees the memory."
+    }
+  },
+  cpp: {
+    syntax: {
+      explanation: "C++ extends C with object-oriented features (classes, inheritance) while keeping manual memory control. It compiles to a native binary, uses std::cout/std::cin for console I/O, and classes bundle data with the functions that operate on it.",
+      example: `#include <iostream>\nusing namespace std;\n\nclass Student {\npublic:\n    string name;\n    int score;\n    void display() { cout << name << ": " << score << endl; }\n};\n\nint main() {\n    Student s = {"Alice", 92};\n    s.display();\n    return 0;\n}`,
+      output: `Alice: 92`,
+      notes: [
+        "cout << uses the insertion operator to chain multiple values into one output statement.",
+        "`using namespace std;` avoids needing std:: before every standard library name.",
+        "Class members are private by default; the public: label makes subsequent members accessible from outside the class."
+      ],
+      practice: "Write a Student class with name, score, and a method that returns a letter grade, then create three instances and print each grade."
+    },
+    stl: {
+      explanation: "The Standard Template Library (STL) provides generic, reusable data structures and algorithms: containers like vector (a resizable array), map (key-value pairs), and set (unique elements), plus algorithms like sort() and find() that work across container types.",
+      example: `#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    vector<int> nums = {5, 2, 8, 1};\n    sort(nums.begin(), nums.end());\n    for (int n : nums) cout << n << " ";\n    return 0;\n}`,
+      output: `1 2 5 8`,
+      notes: [
+        "vector automatically resizes as you push_back() elements, unlike a fixed-size C-style array.",
+        "sort() (and most STL algorithms) take iterator ranges (.begin(), .end()) rather than the container itself.",
+        "map keeps its keys sorted automatically; unordered_map trades that ordering for faster average lookups."
+      ],
+      practice: "Use a vector and sort() to sort a list of student scores, then use a map to count how many students scored above 80 per class."
+    }
+  },
+  nodejs: {
+    intro: {
+      explanation: "Node.js is a JavaScript runtime built on Chrome's V8 engine that lets JavaScript run outside the browser. It's event-driven and non-blocking by default, meaning I/O operations (file reads, network requests) don't halt the rest of the program while waiting.",
+      example: `console.log("Running in Node.js!");\nconsole.log("Node version:", process.version);`,
+      output: `Running in Node.js!\nNode version: v20.x.x (varies by installed version)`,
+      notes: [
+        "Run a script with `node filename.js` from the terminal — no browser needed.",
+        "Node's non-blocking I/O model handles many concurrent connections efficiently without spawning a thread per request.",
+        "process.argv, process.env, and process.exit() are common globals for reading CLI args, environment variables, and exiting."
+      ],
+      practice: "Write a Node.js script that reads a file's contents asynchronously using fs.readFile and logs it."
+    },
+    http: {
+      explanation: "Node's built-in http module lets you create a web server without any external framework — a callback runs for every incoming request, inspecting req and writing a response with res. Frameworks like Express build on top of this to add routing and middleware.",
+      example: `const http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.writeHead(200, { 'Content-Type': 'text/plain' });\n  res.end('Hello from Node.js!');\n});\n\nserver.listen(3000, () => console.log('Server running on port 3000'));`,
+      output: `Server running on port 3000  (visiting http://localhost:3000 shows "Hello from Node.js!")`,
+      notes: [
+        "res.writeHead() sets the status code and headers before res.end() sends the body and closes the response.",
+        "The callback passed to createServer runs once per incoming HTTP request.",
+        "Raw http is verbose for real apps — most Node projects use Express or a similar framework for routing."
+      ],
+      practice: "Extend the server above to return different responses for /home and /about, based on req.url."
+    },
+    npm: {
+      explanation: "npm installs and manages third-party packages, tracked in package.json (dependencies and scripts) and package-lock.json (exact installed versions). `npm install package-name` adds a dependency, and `npm run script-name` runs a defined script.",
+      example: `// package.json\n{\n  "name": "my-app",\n  "scripts": { "start": "node index.js" },\n  "dependencies": { "express": "^4.18.0" }\n}\n\n// terminal\nnpm install\nnpm start`,
+      output: `Installs express (and its dependencies) into node_modules, then runs the "start" script defined in package.json.`,
+      notes: [
+        "Dependencies (needed to run the app) go in \"dependencies\"; dev-only tools go in \"devDependencies\".",
+        "The ^ in a version number (^4.18.0) allows automatic minor/patch updates but not major version changes.",
+        "Never commit node_modules to git — it's regenerated from package.json via npm install."
+      ],
+      practice: "Initialize a new Node project with `npm init -y`, install express, and add a start script that runs your server file."
+    }
   }
 };
 
@@ -1511,16 +1664,8 @@ export default function SkillLearning() {
     setActiveSubtopic(topic.subtopics?.[0] || '');
   };
 
-  const handleSubtopicClick = (topicId, sub) => {
-    // When a subtopic is clicked, make its parent topic active
-    const topic = skillTopics.find(t => t.id === topicId);
-    if (topic) {
-      setActiveTopic(topicId);
-      setExpandedTopic(topicId);
-      setActiveSubtopic(sub);
-    } else {
-      setActiveSubtopic(sub);
-    }
+  const handleSubtopicClick = (sub) => {
+    setActiveSubtopic(sub);
   };
 
   const toggleCompleted = (topicId) => {
@@ -1570,14 +1715,6 @@ export default function SkillLearning() {
     const looksLikeId = /^[a-zA-Z0-9_-]{8,}$/.test(rawUrl);
     if (looksLikeId) { window.open(`https://www.youtube.com/watch?v=${rawUrl}`, '_blank', 'noopener,noreferrer'); return; }
     window.open(fallbackSearch, '_blank', 'noopener,noreferrer');
-  };
-
-  const deriveVideoThumbnail = (video) => {
-    if (video?.thumbnail) return video.thumbnail;
-    const url = String(video?.url || '').trim();
-    const idMatch = url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-    if (idMatch) return `https://img.youtube.com/vi/${idMatch[1]}/mqdefault.jpg`;
-    return `https://via.placeholder.com/320x180?text=Video+Preview`;
   };
 
   const totalTopicCount = skillTopics.length;
@@ -1655,11 +1792,11 @@ export default function SkillLearning() {
                             <span className="gfg-topic-title">{topic.title}</span>
                             {isActive && <span className="gfg-topic-indicator">•</span>}
                           </div>
-                          {topic.subtopics && (
+                          {isActive && topic.subtopics && (
                             <ul className="gfg-subtopic-list">
                               {topic.subtopics.map((sub, idx) => (
-                                <li key={idx} className={`gfg-subtopic-item ${activeSubtopic === sub && activeTopic === topic.id ? 'active' : ''}`}>
-                                  <button type="button" className="gfg-subtopic-btn" onClick={() => handleSubtopicClick(topic.id, sub)}>
+                                <li key={idx} className={`gfg-subtopic-item ${activeSubtopic === sub ? 'active' : ''}`}>
+                                  <button type="button" className="gfg-subtopic-btn" onClick={() => handleSubtopicClick(sub)}>
                                     <span className="gfg-subtopic-bullet">▸</span> {sub}
                                   </button>
                                 </li>
@@ -1809,26 +1946,19 @@ export default function SkillLearning() {
               <p className="gfg-no-videos">No videos available for this topic.</p>
             )}
             {!videosLoading && videos.map(video => (
-              <article key={video.id} className="gfg-video-card" onClick={() => openVideo(video)}>
+              <div key={video.id} className="gfg-video-card" onClick={() => openVideo(video)}>
                 <div className="gfg-video-thumb">
-                  <img src={deriveVideoThumbnail(video)} alt={video.title} />
-                  <div className="gfg-video-play-overlay" aria-hidden="true">
-                    <div className="gfg-video-play-button">
-                      <span className="gfg-video-play-triangle" />
-                    </div>
-                  </div>
-                  {video.duration && <span className="gfg-video-duration">{video.duration}</span>}
+                  {video.thumbnail ? (
+                    <img src={video.thumbnail} alt={video.title} />
+                  ) : (
+                    <span className="gfg-video-play-icon">▶</span>
+                  )}
                 </div>
                 <div className="gfg-video-info">
                   <h4>{video.title}</h4>
-                  <p className="gfg-video-channel">{video.channel || 'Unknown channel'}</p>
-                  <p className="gfg-video-meta">
-                    <span>{video.views || 'Popular video'}</span>
-                    <span className="gfg-video-meta-dot">•</span>
-                    <span>{formatUploadDate(video)}</span>
-                  </p>
+                  <p>{video.channel || 'Unknown'} • {formatUploadDate(video)}</p>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         </section>

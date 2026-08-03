@@ -79,5 +79,10 @@ export const deleteResume = () => api.delete('/resume')
 export const uploadResumeFile = (formData) =>
   api.post('/resume/upload', formData)
 
+export const askAi = (payload) => api.post('/ask/', payload)
+export const getAskChats = () => api.get('/ask/chats')
+export const createAskChat = (payload) => api.post('/ask/chats', payload)
+export const updateAskChat = (chatId, payload) => api.put(`/ask/chats/${chatId}`, payload)
+export const deleteAskChat = (chatId) => api.delete(`/ask/chats/${chatId}`)
 
 export default api

@@ -19,8 +19,6 @@ import {
 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './DashboardShell.css'
-import { useEffect } from 'react'
-import AiChatModal from '../components/AiChatModal'
 import { useAuth } from '../context/AuthContext'
 
 const sidebarItems = [
@@ -44,7 +42,6 @@ function getActiveId(pathname) {
 export default function DashboardShell({ children }) {
   const navigate = useNavigate()
   const { logout } = useAuth()
-  const [aiOpen, setAiOpen] = useState(false)
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const activeId = useMemo(() => getActiveId(location.pathname), [location.pathname])
@@ -124,7 +121,7 @@ export default function DashboardShell({ children }) {
           </div>
 
           <div className="nav-right">
-            <button className="ask-ai-btn" onClick={() => setAiOpen(true)}>
+            <button className="ask-ai-btn" onClick={() => navigate('/ask-ai')}>
               <Sparkles size={18} /> Ask AI
             </button>
             <button className="notification-btn" aria-label="Notifications">
@@ -142,7 +139,6 @@ export default function DashboardShell({ children }) {
         <div className="page-content">{children}</div>
       </div>
 
-      <AiChatModal open={aiOpen} onClose={() => setAiOpen(false)} />
     </div>
   )
 }
